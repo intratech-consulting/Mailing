@@ -8,7 +8,7 @@ connection = pika.BlockingConnection(pika.ConnectionParameters(host='10.2.160.51
 channel = connection.channel()
 
 # Queue declaration
-channel.queue_declare(queue='user', durable=True) # !nog aan te passen!
+channel.queue_declare(queue='mailing', durable=True) 
 
 # Database connection parameters
 db_host = '' 

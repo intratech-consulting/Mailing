@@ -41,7 +41,7 @@ def process_message(ch, method, properties, body):
     root = etree.fromstring(body)
     status_element = root.find("Status")
 
-    if status_element is not None and status_element.text == "Down":
+    if status_element is not None and status_element.text == "0":
         # Validate the XML message
         if validate_xml(body.decode('utf-8')):
             # Process the valid XML
@@ -55,7 +55,7 @@ def process_message(ch, method, properties, body):
         else:
             print("Invalid XML received. Discarding message.")
     else:
-        print("Message does not contain 'Status' element with value 'Down'. Ignoring.")
+        print("Message does not contain 'Status' element with value '0'. Ignoring.")
 
 # RabbitMQ connection parameters
 rabbitmq_host = '10.2.160.51'

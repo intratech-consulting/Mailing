@@ -1,0 +1,9 @@
+services:
+  container:
+    image: mailing/mailing:latest
+    container_name: mailing-container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "7373:7373"

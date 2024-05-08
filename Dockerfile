@@ -3,7 +3,7 @@
 FROM python:3.9
 
 # Set the working directory inside the container
-WORKDIR /TestServer/planning/github/Mailing
+WORKDIR /app
 
 # Copy the Python script and requirements file into the container
 COPY . .
@@ -14,5 +14,8 @@ RUN pip install --no-cache-dir \
     lxml \
     python-dotenv
 
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+
 # Run the Python script when the container starts
-CMD [ "python3", "heartbeat_mailing.py" ]
+CMD [ "supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf" ]

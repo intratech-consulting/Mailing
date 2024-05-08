@@ -19,4 +19,4 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 
 # Run the Python script when the container starts
-CMD [ "supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf" ]
+CMD [ "/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf" ]

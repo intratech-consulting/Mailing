@@ -12,7 +12,8 @@ COPY . .
 RUN pip install --no-cache-dir \
     pika \
     lxml \
-    python-dotenv
+    python-dotenv \
+    supervisor
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 

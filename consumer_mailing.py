@@ -114,8 +114,6 @@ def callback(ch, method, properties, body):
                 send_welcome_mail(root_element)
             elif xml_type == 'status':
                 send_welcome_mail(root_element)
-            elif xml_type == 'attendance':
-                send_welcome_mail(root_element)
             else:
                 print(f"No handler defined for XML type: {xml_type}")
         else:
@@ -125,8 +123,8 @@ def callback(ch, method, properties, body):
         print(f"Error processing message: {str(e)}")
 
 # Connect to RabbitMQ server
-credentials = pika.PlainCredentials('RABBITMQ_USER', 'RABBITMQ_PASSWORD')
-connection = pika.BlockingConnection(pika.ConnectionParameters(host='RABBITMQ_HOST', credentials=credentials))
+credentials = pika.PlainCredentials('user', 'password')
+connection = pika.BlockingConnection(pika.ConnectionParameters(host='10.2.160.51', credentials=credentials))
 channel = connection.channel()
 
 # Declare the queue

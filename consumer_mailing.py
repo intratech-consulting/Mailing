@@ -2,6 +2,9 @@ import pika
 from lxml import etree
 from io import BytesIO
 import MailDynamic
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # XSD schema definition
 xsd_string = {

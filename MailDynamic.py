@@ -4,17 +4,26 @@ import ssl
 from sendgrid.helpers.mail import Mail
 from sendgrid import SendGridAPIClient
 
-context = ssl.create_default_context()
+# context = ssl.create_default_context()
 
 
-# from address we pass to our Mail object, edit with your name
-FROM_EMAIL = 'mats.deraymaeker@student.ehb.be'
+# # from address we pass to our Mail object, edit with your name
+# FROM_EMAIL = 'mats.deraymaeker@student.ehb.be'
 
-# update to your dynamic template id from the UI
-TEMPLATE_ID = 'd-b3b117e3099a4b30baf380342afbd54f'
+# # update to your dynamic template id from the UI
+# TEMPLATE_ID = 'd-b3b117e3099a4b30baf380342afbd54f'
 
 
 def send_welcome_mail(email, name):
+
+    context = ssl.create_default_context()
+
+
+# from address we pass to our Mail object, edit with your name
+    FROM_EMAIL = 'mats.deraymaeker@student.ehb.be'
+
+# update to your dynamic template id from the UI
+    TEMPLATE_ID = 'd-b3b117e3099a4b30baf380342afbd54f'
 
     TO_EMAILS = [(email)]
 

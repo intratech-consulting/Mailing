@@ -162,7 +162,7 @@ def handle_service_down(root_element,status):
         name = root_element.find('SystemName').text
 
         print(name,timestamp, status)
-      #  MailDynamic.send_service_down(name, status, timestamp)
+        MailDynamic.send_mail_service_down(name, status, timestamp)
 
     except Exception as e:
         print(f"Error sending service down mail: {str(e)}")
@@ -173,7 +173,7 @@ def handle_service_up(root_element,status):
         name = root_element.find('SystemName').text
 
         print(name,timestamp, status)
-      #  MailDynamic.send_service_up(name, status, timestamp)
+        MailDynamic.send_mail_service_up(name, status, timestamp)
 
     except Exception as e:
         print(f"Error sending service up mail: {str(e)}")
@@ -193,7 +193,6 @@ def callback(ch, method, properties, body):
             if xml_type == 'user':
                 send_welcome_mail(root_element)
             elif xml_type == 'Heartbeat':
-                send_welcome_mail(root_element)
                 status = root_element.find('Status').text
                 if status.lower() == 'down':
                     handle_service_down(root_element, status)

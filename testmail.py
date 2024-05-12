@@ -41,7 +41,3 @@
 #     # Print any exceptions that occur
 #     print(e)
 
-import ssl
-import MailDynamic
-
-MailDynamic.send_welcome_mail('mats.deraymaeker@gmail.com', 'Mats')

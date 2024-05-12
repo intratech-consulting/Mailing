@@ -4,6 +4,7 @@ from lxml import etree
 from io import BytesIO
 import MailDynamic
 from dotenv import load_dotenv
+import Mailcontacts
 
 load_dotenv()
 
@@ -150,7 +151,8 @@ def send_welcome_mail(root_element):
         lastname = root_element.find('last_name').text
 
         MailDynamic.send_welcome_mail(email, firstname)
-
+        Mailcontacts.add_user_to_contacts(email,firstname,lastname)
+        
     except Exception as e:
         print(f"Error sending welcome mail: {str(e)}")
 

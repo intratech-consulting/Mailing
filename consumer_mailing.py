@@ -146,9 +146,10 @@ def validate_xml(xml_str):
 def send_welcome_mail(root_element):
     try:
         email = root_element.find('email').text
-        name = root_element.find('first_name').text
+        firstname = root_element.find('first_name').text
+        lastname = root_element.find('last_name').text
 
-        MailDynamic.send_welcome_mail(email, name)
+        MailDynamic.send_welcome_mail(email, firstname)
 
     except Exception as e:
         print(f"Error sending welcome mail: {str(e)}")

@@ -12,7 +12,7 @@ FROM_EMAIL = 'mats.deraymaeker@student.ehb.be'
 
 def Send_email(inhoud):
     try:
-        sg = sendgrid.SendGridAPIClient('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')
+        sg = sendgrid.SendGridAPIClient(os.getenv('SENDGRID_API_KEY'))
         response = sg.send(inhoud)
         code, body, headers = response.status_code, response.body, response.headers
         # print(f"Response code: {code}")

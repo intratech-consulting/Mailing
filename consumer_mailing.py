@@ -1,4 +1,5 @@
 import pika
+import os
 from lxml import etree
 from io import BytesIO
 import MailDynamic
@@ -177,8 +178,8 @@ def callback(ch, method, properties, body):
         print(f"Error processing message: {str(e)}")
 
 # Connect to RabbitMQ server
-credentials = pika.PlainCredentials('user', 'password')
-connection = pika.BlockingConnection(pika.ConnectionParameters(host='10.2.160.51', credentials=credentials))
+credentials = pika.PlainCredentials(os.getenv('RABBITMQ_USERS'), os.getenv('RABBITMQ_USERS'))
+connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.getenv('RABBITMQ_HOST'), credentials=credentials))
 channel = connection.channel()
 
 # Declare the queue

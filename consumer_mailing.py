@@ -154,6 +154,29 @@ def send_welcome_mail(root_element):
     except Exception as e:
         print(f"Error sending welcome mail: {str(e)}")
 
+def handle_service_down(root_element,status):
+    try:
+        timestamp = root_element.find('Timestamp').text
+        name = root_element.find('SystemName').text
+
+        print(name,timestamp, status)
+      #  MailDynamic.send_service_down(name, status, timestamp)
+
+    except Exception as e:
+        print(f"Error sending service down mail: {str(e)}")
+
+def handle_service_up(root_element,status):
+    try:
+        timestamp = root_element.find('Timestamp').text
+        name = root_element.find('SystemName').text
+
+        print(name,timestamp, status)
+      #  MailDynamic.send_service_up(name, status, timestamp)
+
+    except Exception as e:
+        print(f"Error sending service up mail: {str(e)}")
+
+
 # Callback function for consuming messages
 def callback(ch, method, properties, body):
     try:
@@ -169,6 +192,11 @@ def callback(ch, method, properties, body):
                 send_welcome_mail(root_element)
             elif xml_type == 'status':
                 send_welcome_mail(root_element)
+                status = root_element.find('Status').text
+                if status.lower() == 'down':
+                    handle_service_down(root_element, status)
+                elif status.lower() == 'active':
+                    handle_service_up(root_element, status)
             else:
                 print(f"No handler defined for XML type: {xml_type}")
         else:

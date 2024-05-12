@@ -206,7 +206,7 @@ def callback(ch, method, properties, body):
         print(f"Error processing message: {str(e)}")
 
 # Connect to RabbitMQ server
-credentials = pika.PlainCredentials(os.getenv('RABBITMQ_USERS'), os.getenv('RABBITMQ_USERS'))
+credentials = pika.PlainCredentials(os.getenv('RABBITMQ_USERS'), os.getenv('RABBITMQ_PASSWORD'))
 connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.getenv('RABBITMQ_HOST'), credentials=credentials))
 channel = connection.channel()
 

@@ -45,4 +45,4 @@ def send_welcome_mail(email, name):
 
 
 if __name__ == "__main__":
-    send_welcome_mail('mats.deraymaeker@gmail.com', 'Bob')
+    send_welcome_mail()

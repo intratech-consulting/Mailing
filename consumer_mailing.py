@@ -9,19 +9,18 @@ load_dotenv()
 
 # XSD schema definition
 xsd_string = {
-    'status': '''
+    'Heartbeat': '''
     <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-
-        <xs:element name="Heartbeat">
-            <xs:complexType>
-                <xs:sequence>
-                    xs:element name="Timestamp" type="xs:dateTime"/>
-                    <xs:element name="Status" type="xs:string"/>
-                    <xs:element name="SystemName" type="xs:string"/>
-                </xs:sequence>
-            </xs:complexType>
-        </xs:element>
-    </xs:schema>
+    <xs:element name="Heartbeat">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Timestamp" type="xs:dateTime"/>
+                <xs:element name="Status" type="xs:string"/>
+                <xs:element name="SystemName" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
     ''',
     'user': '''
     <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
@@ -190,7 +189,7 @@ def callback(ch, method, properties, body):
             
             if xml_type == 'user':
                 send_welcome_mail(root_element)
-            elif xml_type == 'status':
+            elif xml_type == 'Heartbeat':
                 send_welcome_mail(root_element)
                 status = root_element.find('Status').text
                 if status.lower() == 'down':
@@ -206,7 +205,7 @@ def callback(ch, method, properties, body):
         print(f"Error processing message: {str(e)}")
 
 # Connect to RabbitMQ server
-credentials = pika.PlainCredentials(os.getenv('RABBITMQ_USERS'), os.getenv('RABBITMQ_PASSWORD'))
+credentials = pika.PlainCredentials(os.getenv('RABBITMQ_USER'), os.getenv('RABBITMQ_PASSWORD'))
 connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.getenv('RABBITMQ_HOST'), credentials=credentials))
 channel = connection.channel()
 

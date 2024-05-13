@@ -194,7 +194,7 @@ def callback(ch, method, properties, body):
                 send_welcome_mail(root_element)
             elif xml_type == 'Heartbeat':
                 status = root_element.find('Status').text
-                if status.lower() == 'down':
+                if status.lower() == 'inactive':
                     handle_service_down(root_element, status)
                 elif status.lower() == 'active':
                     handle_service_up(root_element, status)

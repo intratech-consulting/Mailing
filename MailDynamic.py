@@ -8,7 +8,8 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 # Rest of your code remains the same
 # from address we pass to our Mail object, edit with your name
-FROM_EMAIL = 'mats.deraymaeker@student.ehb.be'
+FROM_EMAIL = 'intratechconsulting@outlook.com'
+
 
 def Send_email(inhoud):
     try:
@@ -21,6 +22,7 @@ def Send_email(inhoud):
         print("Messages Sent!")
     except Exception as e:
         print("Error: {0}".format(e))
+        
 
 def send_welcome_mail(email, name):
     # update to your dynamic template id from the UI
@@ -43,7 +45,7 @@ def send_mail_service_down(name, status, timestamp):
     # update to your dynamic template id from the UI
     TEMPLATE_ID = 'd-1664eba4bf2c4367a0282be35e5045d5'
     # list of emails and preheader names, update with yours
-    TO_EMAILS = [('intratechconsulting1@gmail.com', 'dev')]
+    TO_EMAILS = [('intratechconsulting@outlook.com', 'dev')]
     # create Mail object and populate
     message = Mail(
         from_email=FROM_EMAIL,

@@ -217,7 +217,7 @@ def callback(ch, method, properties, body):
             
             if xml_type == 'user':
                 id = root_element.find('id')
-                add_service_id(f"{id}",'mailing',f"{id}")
+                add_service_id(id,'mailing',id)
                 send_welcome_mail(root_element)
             elif xml_type == 'Heartbeat':
                 status = root_element.find('Status').text

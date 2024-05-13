@@ -39,5 +39,3 @@ def add_user_to_contacts(email, first_name, last_name):
         # Handle exceptions
         print("Error:", e)
 
-# Example usage:
-add_user_to_contacts("manu.overath@student.ehb.be", "Axel", "Overath")

@@ -194,9 +194,9 @@ def callback(ch, method, properties, body):
                 send_welcome_mail(root_element)
             elif xml_type == 'Heartbeat':
                 status = root_element.find('Status').text
-                if status.lower() == 'inactive':
+                if status.lower() == 'Inactive':
                     handle_service_down(root_element, status)
-                elif status.lower() == 'active':
+                elif status.lower() == 'Active':
                     handle_service_up(root_element, status)
             else:
                 print(f"No handler defined for XML type: {xml_type}")

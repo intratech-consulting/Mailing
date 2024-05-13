@@ -150,7 +150,9 @@ def send_welcome_mail(root_element):
         email = root_element.find('email').text
         firstname = root_element.find('first_name').text
         lastname = root_element.find('last_name').text
-
+        id = root_element.find('id').text
+        
+        add_service_id(id,'mailing',id)
         MailDynamic.send_welcome_mail(email, firstname)
         Mailcontacts.add_user_to_contacts(email,firstname,lastname)
         
@@ -216,8 +218,6 @@ def callback(ch, method, properties, body):
             print(xml_content)
             
             if xml_type == 'user':
-                id = root_element.find('id')
-                add_service_id(id,'mailing',id)
                 send_welcome_mail(root_element)
             elif xml_type == 'Heartbeat':
                 status = root_element.find('Status').text

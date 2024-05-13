@@ -198,11 +198,11 @@ def add_service_id(master_uuid, service, service_id):
         if response.status_code in (200, 201):
             return response.json()
         else:
-            logger.error(f"Unexpected response: {response.status_code} - {response.text}")
+            print(f"Unexpected response: {response.status_code} - {response.text}")
             return None
             
     except requests.exceptions.RequestException as e:
-        logger.error(f"Error during request: {e}")
+        print(f"Error during request: {e}")
         return None
 # Callback function for consuming messages
 def callback(ch, method, properties, body):

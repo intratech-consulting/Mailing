@@ -5,7 +5,8 @@ from io import BytesIO
 import MailDynamic
 from dotenv import load_dotenv
 import Mailcontacts
-
+import requests
+import json
 load_dotenv()
 
 # XSD schema definition
@@ -178,7 +179,31 @@ def handle_service_up(root_element,status):
     except Exception as e:
         print(f"Error sending service up mail: {str(e)}")
 
+def add_service_id(master_uuid, service, service_id):
+    url = f"http://{os.getenv('RABBITMQ_HOST')}:6000/addServiceId"
+    payload = {
+        "MasterUuid": master_uuid,
+        "Service": service,
+        "ServiceId": service_id
+    }
 
+    headers = {
+        "Content-Type": "application/json"  # Set content type to JSON
+    }
+
+    try:
+        response = requests.post(url, data=json.dumps(payload), headers=headers)
+        response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
+        
+        if response.status_code in (200, 201):
+            return response.json()
+        else:
+            logger.error(f"Unexpected response: {response.status_code} - {response.text}")
+            return None
+            
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error during request: {e}")
+        return None
 # Callback function for consuming messages
 def callback(ch, method, properties, body):
     try:
@@ -191,6 +216,8 @@ def callback(ch, method, properties, body):
             print(xml_content)
             
             if xml_type == 'user':
+                id = root_element.find('id')
+                add_service_id(id,'mailing',id)
                 send_welcome_mail(root_element)
             elif xml_type == 'Heartbeat':
                 status = root_element.find('Status').text

@@ -13,7 +13,8 @@ RUN pip install --no-cache-dir \
     pika \
     lxml \
     python-dotenv \
-    supervisor
+    supervisor \
+    sendgrid
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 

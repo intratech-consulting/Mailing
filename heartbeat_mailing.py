@@ -4,6 +4,9 @@ import time
 from datetime import datetime
 import logging
 TEAM = 'mailing'
+from dotenv import load_dotenv
+
+load_dotenv()
 def main(timestamp):
     global TEAM
     logger = logging.getLogger(__name__)

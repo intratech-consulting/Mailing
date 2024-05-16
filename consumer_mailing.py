@@ -151,13 +151,43 @@ def send_welcome_mail(root_element):
         firstname = root_element.find('first_name').text
         lastname = root_element.find('last_name').text
         id = root_element.find('id').text
+        tel = root_element.find('telephone').text
         
         add_service_id(id,'mailing',id)
         MailDynamic.send_welcome_mail(email, firstname)
-        Mailcontacts.add_user_to_contacts(email,firstname,lastname)
+        Mailcontacts.add_user_to_contacts(email,firstname,lastname, id, tel)
         
     except Exception as e:
         print(f"Error sending welcome mail: {str(e)}")
+
+
+def update_contact(root_element):
+    try:
+        email = root_element.find('email').text
+        firstname = root_element.find('first_name').text
+        lastname = root_element.find('last_name').text
+        id = root_element.find('id').text
+        tel = root_element.find('telephone').text
+        
+        Mailcontacts.add_user_to_contacts(email,firstname,lastname, id, tel)
+        
+    except Exception as e:
+        print(f"Error sending welcome mail: {str(e)}")
+
+
+def delete_contact(root_element):
+    try:
+        email = root_element.find('email').text
+        firstname = root_element.find('first_name').text
+        lastname = root_element.find('last_name').text
+        id = root_element.find('id').text
+        tel = root_element.find('telephone').text
+        
+        Mailcontacts.delete_contact_by_id(email,firstname,lastname, id, tel)
+        
+    except Exception as e:
+        print(f"Error sending welcome mail: {str(e)}")
+
 
 def handle_service_down(root_element,status):
     try:
@@ -218,7 +248,15 @@ def callback(ch, method, properties, body):
             print(xml_content)
             
             if xml_type == 'user':
-                send_welcome_mail(root_element)
+                crud = root_element.find('crud_operation').text
+                if crud == 'create':
+                    send_welcome_mail(root_element)
+                elif crud == 'update':
+                    update_contact(root_element)
+                elif crud == 'delete':
+                    delete_contact(root_element)
+                else:
+                    print(f"No such crud operation: {crud}")
             elif xml_type == 'Heartbeat':
                 status = root_element.find('Status').text
                 if status.lower() == 'inactive':

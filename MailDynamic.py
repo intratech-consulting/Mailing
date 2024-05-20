@@ -26,7 +26,7 @@ def Send_email(inhoud):
 
 def send_welcome_mail(email, name):
     # update to your dynamic template id from the UI
-    TEMPLATE_ID = 'd-9637d65d68984cfc8cccf34f2ddfa6bb'
+    TEMPLATE_ID = 'd-4e019360d33847778347e34615b2361b'
     # list of emails and preheader names, update with yours
     TO_EMAILS = [(email, name)]
     # create Mail object and populate
@@ -43,7 +43,7 @@ def send_welcome_mail(email, name):
 
 def send_mail_service_down(name, status, timestamp):
     # update to your dynamic template id from the UI
-    TEMPLATE_ID = 'd-1664eba4bf2c4367a0282be35e5045d5'
+    TEMPLATE_ID = 'd-045e38832342427eb14fa50e326a1d4c'
     # list of emails and preheader names, update with yours
     TO_EMAILS = [('intratechconsulting1@gmail.com', 'dev')]
     # create Mail object and populate
@@ -63,7 +63,7 @@ def send_mail_service_down(name, status, timestamp):
 
 def send_mail_service_up(name, status, timestamp):
     # update to your dynamic template id from the UI
-    TEMPLATE_ID = 'd-1664eba4bf2c4367a0282be35e5045d5'
+    TEMPLATE_ID = 'd-045e38832342427eb14fa50e326a1d4c'
     # list of emails and preheader names, update with yours
     TO_EMAILS = [('intratechconsulting1@gmail.com', 'dev')]
     # create Mail object and populate

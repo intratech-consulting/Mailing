@@ -50,8 +50,15 @@ def delete_contact_by_id(email, first_name, last_name, id, tel):
         # Create SendGrid API client
         sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY_CONTACTS'))
 
+        data = {
+            "identifier_type": "EXTERNALID",
+            "identifier_value": id
+        }
+
         # Call the SendGrid API to delete contact
-        response = sg.client.marketing.contacts.search.external_id.delete(id)
+        response = sg.client.marketing.contacts.identifiers.delete(
+            request_body = data
+        )
 
         # Print response details
         print("Status Code:", response.status_code)

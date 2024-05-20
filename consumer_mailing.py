@@ -158,7 +158,7 @@ def send_welcome_mail(root_element):
         id = root_element.find('id').text
         tel = root_element.find('telephone').text
         
-        add_service_id(id,'mailing',id)
+        #add_service_id(id,'mailing',id)
         MailDynamic.send_welcome_mail(email, firstname)
         Mailcontacts.add_user_to_contacts(email,firstname,lastname, id, tel)
         

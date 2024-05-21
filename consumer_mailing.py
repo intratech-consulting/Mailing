@@ -132,6 +132,45 @@ xsd_string = {
 
 </xs:schema>
 ''',
+'invoice':'''
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="invoice">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="routing_key">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:minLength value="1"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="filename">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:minLength value="1"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="email">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="pdfBase64">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:minLength value="1"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
+''',
 
 }
 
@@ -263,14 +302,11 @@ def callback(ch, method, properties, body):
                 else:
                     print(f"No such crud operation: {crud}")
             elif xml_type == 'Heartbeat':
-                checkservice = root_element.find('SystemName').text
                 status = root_element.find('Status').text
                 if status.lower() == 'inactive':
-                    if checkservice.lower() != 'kassa':
-                        handle_service_down(root_element, status)
+                    handle_service_down(root_element, status)
                 elif status.lower() == 'active':
-                    if checkservice.lower() != 'kassa':
-                        handle_service_up(root_element, status)
+                    handle_service_up(root_element, status)
             else:
                 print(f"No handler defined for XML type: {xml_type}")
         else:

@@ -2,6 +2,7 @@ services:
   container:
     image: mailing/mailing:latest
     container_name: mailing-container
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile

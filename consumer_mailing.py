@@ -263,7 +263,7 @@ def callback(ch, method, properties, body):
                 else:
                     print(f"No such crud operation: {crud}")
             elif xml_type == 'Heartbeat':
-                checkservice = root_element.find('SystemName')
+                checkservice = root_element.find('SystemName').text
                 status = root_element.find('Status').text
                 if status.lower() == 'inactive':
                     if checkservice.lower() != 'kassa':

@@ -253,7 +253,7 @@ def callback(ch, method, properties, body):
             print(xml_content)
             
             if xml_type == 'user':
-                crud = root_element.find('crud_operation')
+                crud = root_element.find('crud_operation').text
                 if crud == 'create':
                     send_welcome_mail(root_element)
                 elif crud == 'update':

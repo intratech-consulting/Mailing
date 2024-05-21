@@ -253,7 +253,7 @@ def callback(ch, method, properties, body):
             print(xml_content)
             
             if xml_type == 'user':
-                crud = root_element.find('crud_operation').text
+                crud = root_element.find('crud_operation').text.lower()
                 if crud == 'create':
                     send_welcome_mail(root_element)
                 elif crud == 'update':
@@ -263,11 +263,14 @@ def callback(ch, method, properties, body):
                 else:
                     print(f"No such crud operation: {crud}")
             elif xml_type == 'Heartbeat':
+                checkservice = root_element.find('SystemName').lower()
                 status = root_element.find('Status').text
                 if status.lower() == 'inactive':
-                    handle_service_down(root_element, status)
+                    if checkservice != 'kassa':
+                        handle_service_down(root_element, status)
                 elif status.lower() == 'active':
-                    handle_service_up(root_element, status)
+                    if checkservice != 'kassa':
+                        handle_service_up(root_element, status)
             else:
                 print(f"No handler defined for XML type: {xml_type}")
         else:

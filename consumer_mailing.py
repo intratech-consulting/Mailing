@@ -238,7 +238,7 @@ def send_invoice(root_element):
         email = root_element.find('email').text
         invoice = root_element.find('pdfBase64').text
         
-        Mailcontacts.send_invoice_mail(email,filename,invoice)
+        MailDynamic.send_invoice_mail(email,filename,invoice)
         
     except Exception as e:
         print(f"Error sending welcome mail: {str(e)}")

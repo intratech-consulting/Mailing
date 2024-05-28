@@ -6,6 +6,7 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import (Mail, Attachment, FileContent, FileName, FileType, Disposition)
 from sendgrid.helpers.mail import Mail
 import logging
+import sys
 
 # Create a custom logger
 logger = logging.getLogger(__name__)

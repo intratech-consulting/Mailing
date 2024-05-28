@@ -4,6 +4,32 @@ import sendgrid
 import base64
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import (Mail, Attachment, FileContent, FileName, FileType, Disposition)
+from sendgrid.helpers.mail import Mail
+import logging
+
+# Create a custom logger
+logger = logging.getLogger(__name__)
+
+# Set the level of this logger.
+# DEBUG, INFO, WARNING, ERROR, CRITICAL can be used depending on the granularity of log you want.
+logger.setLevel(logging.DEBUG)
+
+# Create handlers
+c_handler = logging.StreamHandler()
+s_handler = logging.StreamHandler(sys.stdout)
+c_handler.setLevel(logging.DEBUG)
+s_handler.setLevel(logging.DEBUG)  # Set level to DEBUG
+
+# Create formatters and add it to handlers
+c_format = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+s_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+c_handler.setFormatter(c_format)
+s_handler.setFormatter(s_format)
+
+# Add handlers to the logger
+logger.addHandler(c_handler)
+logger.addHandler(s_handler)
+
 
 # Create a default SSL context
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -15,18 +41,20 @@ FROM_EMAIL = 'gdt.intratech@ehb.be'
 
 def Send_email(inhoud):
     try:
+        logger.info("Sending email...")
         sg = sendgrid.SendGridAPIClient(os.getenv('SENDGRID_API_KEY'))
         response = sg.send(inhoud)
         code, body, headers = response.status_code, response.body, response.headers
         # print(f"Response code: {code}")
         # print(f"Response headers: {headers}")
         # print(f"Response body: {body}")
-        print("Messages Sent!")
+        logger.info("Messages Sent!")
     except Exception as e:
         print("Error: {0}".format(e))
 
 
 def send_welcome_mail(email, name):
+    logger.info("Entered welcome mail function")
     # update to your dynamic template id from the UI
     TEMPLATE_ID = 'd-4e019360d33847778347e34615b2361b'
     # list of emails and preheader names, update with yours

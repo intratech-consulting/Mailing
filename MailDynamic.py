@@ -84,17 +84,13 @@ def send_mail_service_up(name, status, timestamp):
 
 def send_invoice_mail(email,filename,invoice):
     # update to your dynamic template id from the UI
-    TEMPLATE_ID = 'd-4e019360d33847778347e34615b2361b'
+    TEMPLATE_ID = 'd-221bd5139ae34c3c99248f4fd456aabf'
     # list of emails and preheader names, update with yours
     TO_EMAILS = [(email, 'company')]
     # create Mail object and populate
     message = Mail(
         from_email=FROM_EMAIL,
         to_emails=TO_EMAILS)
-    # pass custom values for our HTML placeholders
-    message.dynamic_template_data = {
-        'name': 'name'
-    }
     attachedFile = Attachment(
         FileContent(invoice),
         FileName(filename + '.pdf'),

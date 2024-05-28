@@ -232,6 +232,16 @@ def delete_contact(root_element):
     except Exception as e:
         print(f"Error sending welcome mail: {str(e)}")
 
+def send_invoice(root_element):
+    try:
+        filename = root_element.find('filename').text
+        email = root_element.find('email').text
+        invoice = root_element.find('pdfBase64').text
+        
+        Mailcontacts.delete_contact_by_id(email,filename,invoice)
+        
+    except Exception as e:
+        print(f"Error sending welcome mail: {str(e)}")
 
 def handle_service_down(root_element,status):
     try:
@@ -307,6 +317,8 @@ def callback(ch, method, properties, body):
                     handle_service_down(root_element, status)
                 elif status.lower() == 'active':
                     handle_service_up(root_element, status)
+            elif xml_type == 'invoice':
+                send_invoice(root_element)
             else:
                 print(f"No handler defined for XML type: {xml_type}")
         else:

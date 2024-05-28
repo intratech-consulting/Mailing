@@ -1,7 +1,9 @@
 import os
 import ssl
 import sendgrid
-from sendgrid.helpers.mail import Mail
+import base64
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import (Mail, Attachment, FileContent, FileName, FileType, Disposition)
 
 # Create a default SSL context
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -77,6 +79,29 @@ def send_mail_service_up(name, status, timestamp):
         'timetitle' : 'Backup',
         'time' : timestamp
     }
+    message.template_id = TEMPLATE_ID
+    Send_email(message)
+
+def send_invoice_mail(email,filename,invoice):
+    # update to your dynamic template id from the UI
+    TEMPLATE_ID = 'd-4e019360d33847778347e34615b2361b'
+    # list of emails and preheader names, update with yours
+    TO_EMAILS = [(email, 'company')]
+    # create Mail object and populate
+    message = Mail(
+        from_email=FROM_EMAIL,
+        to_emails=TO_EMAILS)
+    # pass custom values for our HTML placeholders
+    message.dynamic_template_data = {
+        'name': 'name'
+    }
+    attachedFile = Attachment(
+        FileContent(invoice),
+        FileName(filename + '.pdf'),
+        FileType('application/pdf'),
+        Disposition('attachment')
+    )
+    message.attachment = attachedFile
     message.template_id = TEMPLATE_ID
     Send_email(message)
 

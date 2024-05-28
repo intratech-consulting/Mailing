@@ -197,7 +197,7 @@ def send_welcome_mail(root_element):
         id = root_element.find('id').text
         tel = root_element.find('telephone').text
         
-        add_service_id(id,'mailing',id)
+        # add_service_id(id,'mailing',id)
         MailDynamic.send_welcome_mail(email, firstname)
         Mailcontacts.add_user_to_contacts(email,firstname,lastname, id, tel)
         
@@ -265,31 +265,33 @@ def handle_service_up(root_element,status):
     except Exception as e:
         print(f"Error sending service up mail: {str(e)}")
 
-def add_service_id(master_uuid, service, service_id):
-    url = f"http://{os.getenv('RABBITMQ_HOST')}:6000/addServiceId"
-    payload = {
-        "MasterUuid": master_uuid,
-        "Service": service,
-        "ServiceId": service_id
-    }
+# def add_service_id(master_uuid, service, service_id):
+#     url = f"http://{os.getenv('RABBITMQ_HOST')}:6000/addServiceId"
+#     payload = {
+#         "MasterUuid": master_uuid,
+#         "Service": service,
+#         "ServiceId": service_id
+#     }
 
-    headers = {
-        "Content-Type": "application/json"  # Set content type to JSON
-    }
+#     headers = {
+#         "Content-Type": "application/json"  # Set content type to JSON
+#     }
 
-    try:
-        response = requests.post(url, data=json.dumps(payload), headers=headers)
-        response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
+#     try:
+#         response = requests.post(url, data=json.dumps(payload), headers=headers)
+#         response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
         
-        if response.status_code in (200, 201):
-            return response.json()
-        else:
-            print(f"Unexpected response: {response.status_code} - {response.text}")
-            return None
+#         if response.status_code in (200, 201):
+#             return response.json()
+#         else:
+#             print(f"Unexpected response: {response.status_code} - {response.text}")
+#             return None
             
-    except requests.exceptions.RequestException as e:
-        print(f"Error during request: {e}")
-        return None
+#     except requests.exceptions.RequestException as e:
+#         print(f"Error during request: {e}")
+#         return None
+
+
 # Callback function for consuming messages
 def callback(ch, method, properties, body):
     try:

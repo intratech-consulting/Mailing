@@ -29,9 +29,9 @@ def add_user_to_contacts(email, first_name, last_name, id, tel):
         )
 
         # Print response details
-        print("Status Code:", response.status_code)
-        print("Response Body:", response.body)
-        print("Headers:", response.headers)
+        # print("Status Code:", response.status_code)
+        # print("Response Body:", response.body)
+        # print("Headers:", response.headers)
 
         # Check for errors in response body
         if response.status_code != 202:

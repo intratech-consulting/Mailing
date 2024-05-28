@@ -10,7 +10,7 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 # Rest of your code remains the same
 # from address we pass to our Mail object, edit with your name
-FROM_EMAIL = 'intratechconsulting@outlook.com'
+FROM_EMAIL = 'gdt.intratech@ehb.be'
 
 
 def Send_email(inhoud):

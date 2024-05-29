@@ -202,8 +202,8 @@ def send_welcome_mail(root_element):
         tel = root_element.find('telephone').text
         
         add_service_id(id,'mailing',id)
-        MailDynamic.send_welcome_mail(email, firstname)
         Mailcontacts.add_user_to_contacts(email,firstname,lastname, id, tel)
+        MailDynamic.send_welcome_mail(email, firstname)
         
     except Exception as e:
         log = (f"Error sending welcome mail: {str(e)}")

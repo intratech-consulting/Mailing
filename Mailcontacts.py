@@ -44,8 +44,7 @@ def add_user_to_contacts(email, first_name, last_name, id, tel):
 
 
 def delete_contact_by_id(email, first_name, last_name, id, tel):
-    try:
-        # Replace with your SendGrid API key
+    # Replace with your SendGrid API key
         SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY_CONTACTS')
 
         sg = SendGridAPIClient(api_key=SENDGRID_API_KEY)
@@ -94,6 +93,3 @@ def delete_contact_by_id(email, first_name, last_name, id, tel):
                 print("Contact not found.")
         else:
             print("Error retrieving contacts:", response.status_code, response.body)
-    except Exception as e:
-        # Handle exceptions
-        print("Error:", e)

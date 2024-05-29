@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import pika
 import os
 import xml.etree.ElementTree as ET  # Importing ElementTree to handle XML

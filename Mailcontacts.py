@@ -50,7 +50,7 @@ def delete_contact_by_id(email, first_name, last_name, id, tel):
         sg = SendGridAPIClient(api_key=SENDGRID_API_KEY)
 
         # Replace with the actual external ID
-        external_id_to_delete = 'EXTERNAL_ID_TO_DELETE'
+        external_id_to_delete = id
 
         # Step 1: Retrieve the contact ID using the external ID
         response = sg.client.marketing.contacts.get()

@@ -59,7 +59,7 @@ def delete_contact_by_id(email, first_name, last_name, id, tel):
             contacts = response.to_dict.get('result', [])
             contact_id = None
             for contact in contacts:
-                if contact['custom_fields']['external_id'] == external_id_to_delete:
+                if contact['external_id'] == external_id_to_delete:
                     contact_id = contact['id']
                     break
             if contact_id:

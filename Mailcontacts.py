@@ -1,6 +1,7 @@
 import os
 from sendgrid import SendGridAPIClient
 from dotenv import load_dotenv
+import time
 
 def add_user_to_contacts(email, first_name, last_name, id, tel):
     try:
@@ -63,10 +64,30 @@ def delete_contact_by_id(email, first_name, last_name, id, tel):
                     contact_id = contact['id']
                     break
             if contact_id:
-                # Step 2: Delete the contact using the contact ID
+                # Delete the contact using the contact ID
                 delete_response = sg.client.marketing.contacts.delete(query_params={'ids': contact_id})
-                if delete_response.status_code == 204:
-                    print("Contact deleted successfully.")
+                if delete_response.status_code == 202:
+                    job_id = delete_response.to_dict['job_id']
+                    print(f"Deletion job submitted successfully. Job ID: {job_id}")
+
+                    # Check the status of the job
+                    while True:
+                        status_response = sg.client.marketing.jobs._(job_id).get()
+                        if status_response.status_code == 200:
+                            status = status_response.to_dict['status']
+                            print(f"Job status: {status}")
+                            if status == 'completed':
+                                print("Contact deletion completed successfully.")
+                                break
+                            elif status == 'failed':
+                                print("Contact deletion failed.")
+                                break
+                            else:
+                                # Wait before checking again
+                                time.sleep(5)
+                        else:
+                            print("Error checking job status:", status_response.status_code, status_response.body)
+                            break
                 else:
                     print("Error deleting contact:", delete_response.status_code, delete_response.body)
             else:

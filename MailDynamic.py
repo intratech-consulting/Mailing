@@ -57,7 +57,7 @@ def Send_email(inhoud):
 def send_welcome_mail(email, name):
     logger.info("Entered welcome mail function")
     # update to your dynamic template id from the UI
-    TEMPLATE_ID = 'd-4e019360d33847778347e34615b2361b'
+    TEMPLATE_ID = 'd-6a0bfab49443471a91a76608083db6eb'
     # list of emails and preheader names, update with yours
     TO_EMAILS = [(email, name)]
     # create Mail object and populate

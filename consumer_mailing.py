@@ -8,6 +8,7 @@ import Mailcontacts
 import requests
 import json
 import publisher_mailing
+import time
 load_dotenv()
 
 # XSD schema definition
@@ -202,6 +203,7 @@ def send_welcome_mail(root_element):
         tel = root_element.find('telephone').text
         
         add_service_id(id,'mailing',id)
+        time.sleep(5)
         Mailcontacts.add_user_to_contacts(email,firstname,lastname, id, tel)
         MailDynamic.send_welcome_mail(email, firstname)
         

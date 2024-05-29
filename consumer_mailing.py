@@ -217,7 +217,7 @@ def update_contact(root_element):
         Mailcontacts.add_user_to_contacts(email,firstname,lastname, id, tel)
         
     except Exception as e:
-        print(f"Error sending welcome mail: {str(e)}")
+        print(f"Error updating contact: {str(e)}")
 
 
 def delete_contact(root_element):
@@ -231,7 +231,7 @@ def delete_contact(root_element):
         Mailcontacts.delete_contact_by_id(email,firstname,lastname, id, tel)
         
     except Exception as e:
-        print(f"Error sending welcome mail: {str(e)}")
+        print(f"Error delete contact: {str(e)}")
 
 def send_invoice(root_element):
     try:
@@ -242,7 +242,7 @@ def send_invoice(root_element):
         MailDynamic.send_invoice_mail(email,filename,invoice)
         
     except Exception as e:
-        print(f"Error sending welcome mail: {str(e)}")
+        print(f"Error sending invoice mail: {str(e)}")
 
 def handle_service_down(root_element,status):
     try:

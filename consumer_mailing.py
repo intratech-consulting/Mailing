@@ -306,11 +306,12 @@ def callback(ch, method, properties, body):
             
             if xml_type == 'user':
                 crud = root_element.find('crud_operation').text
+                routingkey = root_element.find('routing_key').text
                 if crud == 'create':
                     send_welcome_mail(root_element)
                 elif crud == 'update':
                     update_contact(root_element)
-                elif crud == 'delete':
+                elif crud == 'delete' and routingkey == 'user.facturatie':
                     delete_contact(root_element)
                 else:
                     print(f"No such crud operation: {crud}")

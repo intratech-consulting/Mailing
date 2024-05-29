@@ -2,6 +2,7 @@ import os
 from sendgrid import SendGridAPIClient
 from dotenv import load_dotenv
 import time
+import publisher_mailing
 
 def add_user_to_contacts(email, first_name, last_name, id, tel):
     try:
@@ -37,10 +38,14 @@ def add_user_to_contacts(email, first_name, last_name, id, tel):
         # Check for errors in response body
         if response.status_code != 202:
             print("Error Response:", response.body)
+            loggera = ("Error Response:", response.body)
+            publisher_mailing.sendLogsToMonitoring("Error adding contact", loggera, False)
 
     except Exception as e:
         # Handle exceptions
         print("Error:", e)
+        logerr = ("Error:", e)
+        publisher_mailing.sendLogsToMonitoring("Error adding contact", logerr, False)
 
 
 def delete_contact_by_id(email, first_name, last_name, id, tel):
@@ -85,11 +90,15 @@ def delete_contact_by_id(email, first_name, last_name, id, tel):
                                 # Wait before checking again
                                 time.sleep(5)
                         else:
-                            print("Error checking job status:", status_response.status_code, status_response.body)
+                            loga = ("Error checking job status:", status_response.status_code, status_response.body)
+                            publisher_mailing.sendLogsToMonitoring("Error checking job status", loga, False)
                             break
                 else:
-                    print("Error deleting contact:", delete_response.status_code, delete_response.body)
+                    logb = ("Error deleting contact:", delete_response.status_code, delete_response.body)
+                    publisher_mailing.sendLogsToMonitoring("Error deleting contact", logb, False)
             else:
-                print("Contact not found.")
+                logc = ("Contact not found.")
+                publisher_mailing.sendLogsToMonitoring("Contact not found.", logc, False)
         else:
-            print("Error retrieving contacts:", response.status_code, response.body)
+            lodd = ("Error retrieving contacts:", response.status_code, response.body)
+            publisher_mailing.sendLogsToMonitoring("Error retrieving contacts", lodd, False)

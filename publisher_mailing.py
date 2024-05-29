@@ -1,50 +1,71 @@
+import datetime
 import pika
 import os
 import xml.etree.ElementTree as ET  # Importing ElementTree to handle XML
+import logging
+import sys
 
-# RabbitMQ connection parameters
-credentials = pika.PlainCredentials('user', 'password')
-connection = pika.BlockingConnection(pika.ConnectionParameters(host='10.2.160.51', credentials=credentials))
-channel = connection.channel()
+# Create a custom logger
+logger = logging.getLogger(__name__)
+
+# Set the level of this logger.
+# DEBUG, INFO, WARNING, ERROR, CRITICAL can be used depending on the granularity of log you want.
+logger.setLevel(logging.DEBUG)
+
+# Create handlers
+c_handler = logging.StreamHandler()
+s_handler = logging.StreamHandler(sys.stdout)
+c_handler.setLevel(logging.DEBUG)
+s_handler.setLevel(logging.DEBUG)  # Set level to DEBUG
+
+# Create formatters and add it to handlers
+c_format = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+s_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+c_handler.setFormatter(c_format)
+s_handler.setFormatter(s_format)
+
+# Add handlers to the logger
+logger.addHandler(c_handler)
+logger.addHandler(s_handler)
 
 
+def sendLogsToMonitoring(functionName, logMessage, isError):
+    # Construct XML document for LogEntry
+    log_elem = ET.Element('LogEntry')
 
-# Declare the 'user' queue
-channel.queue_declare(queue='user', durable=True)
+    # Define elements with provided values
+    elements = [
+        ('SystemName', 'Mailing'),
+        ('FunctionName', str(functionName)),
+        ('Logs', str(logMessage)),
+        ('Error', 'true' if isError else 'false'),
+        ('Timestamp', datetime.now().isoformat()),  # Timestamp in ISO 8601 format
+    ]
+
+    for elem_name, elem_value in elements:
+        ET.SubElement(log_elem, elem_name).text = elem_value
+
+    # Create XML string
+    xml_str = ET.tostring(log_elem, encoding='utf-8', method='xml')
+    xml_str = xml_str.decode('utf-8')  # Convert bytes to string
+
+    # Publish Log XML object to RabbitMQ
+    publish_xml_message('amq.topic', 'logs', xml_str)
 
 
-# Create the XML user-object
-user_xml = """
-<user>
-    <user_id>3</user_id>
-    <first_name>John</first_name>
-    <last_name>Doe</last_name>
-    <email>john.doe@mail.com</email>
-    <telephone>+32467179912</telephone>
-    <birthday>2024-04-14</birthday>
-    <address>
-        <country>Belgium</country>
-        <state>Brussels</state>
-        <city>Brussels</city>
-        <zip>1000</zip>
-        <street>Nijverheidskaai</street>
-        <house_number>170</house_number>
-    </address>
-    <company_email>john.doe@company.com</company_email>
-    <company_id></company_id>
-    <source></source>
-    <user_role></user_role>
-    <invoice></invoice>
-</user>
-"""
+def publish_xml_message(exchange_name, routing_key, xml_str):
+    # Publish the XML object to RabbitMQ
+    credentials = pika.PlainCredentials(os.getenv('RABBITMQ_USER'), os.getenv('RABBITMQ_PASSWORD'))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=os.getenv('RABBITMQ_HOST'), credentials=credentials))
+    channel = connection.channel()
 
-# Publish the XML user-object as a message
-channel.basic_publish(
-    exchange='amq.topic',
-    routing_key='user',
-    body=user_xml  # Set the message body as the serialized XML string
-)
+    # Declare the exchange
+    channel.exchange_declare(exchange=exchange_name, exchange_type='topic', durable=True)
 
-print('Message sent.')
-channel.close()
-connection.close()
+    # Publish the message
+    channel.basic_publish(exchange=exchange_name, routing_key=routing_key, body=xml_str)
+
+    # Close the connection
+    connection.close()
+        
+    logger.info(f"XML message published to RabbitMQ with routing key '{routing_key}'")

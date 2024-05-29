@@ -7,6 +7,7 @@ from sendgrid.helpers.mail import (Mail, Attachment, FileContent, FileName, File
 from sendgrid.helpers.mail import Mail
 import logging
 import sys
+import publisher_mailing
 
 # Create a custom logger
 logger = logging.getLogger(__name__)
@@ -50,8 +51,12 @@ def Send_email(inhoud):
         # print(f"Response headers: {headers}")
         # print(f"Response body: {body}")
         logger.info("Messages Sent!")
+        logsendmail = "Mail send"
+        publisher_mailing.sendLogsToMonitoring("Mail has been send", logsendmail, False)
     except Exception as e:
         print("Error: {0}".format(e))
+        loggerpub = (f"Error: {0}".format(e))
+        publisher_mailing.sendLogsToMonitoring("Error sending mail", loggerpub, False)
 
 
 def send_welcome_mail(email, name):

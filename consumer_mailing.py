@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 import Mailcontacts
 import requests
 import json
+import publisher_mailing
 load_dotenv()
 
 # XSD schema definition
@@ -186,6 +187,8 @@ def validate_xml(xml_str):
             etree.fromstring(xml_str, xmlparser)
             return True, root  # Valid XML and root element
         else:
+            logvalidatexml = (f"No schema available for the received XML root element '{root.tag}'")
+            publisher_mailing.sendLogsToMonitoring("Invalid xml", logvalidatexml, False)
             return False, f"No schema available for the received XML root element '{root.tag}'"
     except etree.XMLSchemaError as e:
         return False, str(e)  # Invalid XML
@@ -203,7 +206,8 @@ def send_welcome_mail(root_element):
         Mailcontacts.add_user_to_contacts(email,firstname,lastname, id, tel)
         
     except Exception as e:
-        print(f"Error sending welcome mail: {str(e)}")
+        log = (f"Error sending welcome mail: {str(e)}")
+        publisher_mailing.sendLogsToMonitoring("Error sending welcome mail", log, False)
 
 
 def update_contact(root_element):
@@ -217,7 +221,8 @@ def update_contact(root_element):
         Mailcontacts.add_user_to_contacts(email,firstname,lastname, id, tel)
         
     except Exception as e:
-        print(f"Error updating contact: {str(e)}")
+        log = (f"Error updating contact: {str(e)}")
+        publisher_mailing.sendLogsToMonitoring("Error updating contact", log, False)
 
 
 def delete_contact(root_element):
@@ -231,7 +236,8 @@ def delete_contact(root_element):
         Mailcontacts.delete_contact_by_id(email,firstname,lastname, id, tel)
         
     except Exception as e:
-        print(f"Error delete contact: {str(e)}")
+        log = (f"Error delete contact: {str(e)}")
+        publisher_mailing.sendLogsToMonitoring("Error delete contact", log, False)
 
 def send_invoice(root_element):
     try:
@@ -242,7 +248,8 @@ def send_invoice(root_element):
         MailDynamic.send_invoice_mail(email,filename,invoice)
         
     except Exception as e:
-        print(f"Error sending invoice mail: {str(e)}")
+        log = (f"Error sending invoice mail: {str(e)}")
+        publisher_mailing.sendLogsToMonitoring("Error sending invoice mail", log, False)
 
 def handle_service_down(root_element,status):
     try:
@@ -253,7 +260,8 @@ def handle_service_down(root_element,status):
         MailDynamic.send_mail_service_down(name, status, timestamp)
 
     except Exception as e:
-        print(f"Error sending service down mail: {str(e)}")
+        log = (f"Error sending service down mail: {str(e)}")
+        publisher_mailing.sendLogsToMonitoring("Error sending service down mail", log, False)
 
 def handle_service_up(root_element,status):
     try:
@@ -264,7 +272,8 @@ def handle_service_up(root_element,status):
         MailDynamic.send_mail_service_up(name, status, timestamp)
 
     except Exception as e:
-        print(f"Error sending service up mail: {str(e)}")
+        log = (f"Error sending service up mail: {str(e)}")
+        publisher_mailing.sendLogsToMonitoring("Error sending service up mail", log, False)
 
 def add_service_id(master_uuid, service, service_id):
     url = f"http://{os.getenv('RABBITMQ_HOST')}:6000/addServiceId"
@@ -285,11 +294,13 @@ def add_service_id(master_uuid, service, service_id):
         if response.status_code in (200, 201):
             return response.json()
         else:
-            print(f"Unexpected response: {response.status_code} - {response.text}")
+            log = (f"Unexpected response: {response.status_code} - {response.text}")
+            publisher_mailing.sendLogsToMonitoring("Unexpected response", log, False)
             return None
             
     except requests.exceptions.RequestException as e:
-        print(f"Error during request: {e}")
+        logg = (f"Error during request: {e}")
+        publisher_mailing.sendLogsToMonitoring("Error during request", logg, False)
         return None
 
 
@@ -311,10 +322,14 @@ def callback(ch, method, properties, body):
                     send_welcome_mail(root_element)
                 elif crud == 'update':
                     update_contact(root_element)
-                elif crud == 'delete' and routingkey == 'user.facturatie':
-                    delete_contact(root_element)
+                elif crud == 'delete':
+                    if routingkey == 'user.facturatie':
+                        delete_contact(root_element)
+                    log = (f"Only soft delete from: {routingkey}")
+                    publisher_mailing.sendLogsToMonitoring("Only soft delete", log, False)
                 else:
-                    print(f"No such crud operation: {crud}")
+                    loga = (f"No such crud operation: {crud}")
+                    publisher_mailing.sendLogsToMonitoring("No such crud operation", loga, False)
             elif xml_type == 'Heartbeat':
                 status = root_element.find('Status').text
                 if status.lower() == 'inactive':
@@ -324,12 +339,16 @@ def callback(ch, method, properties, body):
             elif xml_type == 'invoice':
                 send_invoice(root_element)
             else:
-                print(f"No handler defined for XML type: {xml_type}")
+                logb = (f"No handler defined for XML type: {xml_type}")
+                publisher_mailing.sendLogsToMonitoring("No handler defined for XML type", logb, False)
         else:
-            print(f"Received invalid XML: {root_element}")
+            logc = (f"Received invalid XML: {root_element}")
+            publisher_mailing.sendLogsToMonitoring("Received invalid XML", logc, False)
+
     
     except Exception as e:
-        print(f"Error processing message: {str(e)}")
+        logd = (f"Error processing message: {str(e)}")
+        publisher_mailing.sendLogsToMonitoring("Error processing message", logd, False)
 
 # Connect to RabbitMQ server
 credentials = pika.PlainCredentials(os.getenv('RABBITMQ_USER'), os.getenv('RABBITMQ_PASSWORD'))
